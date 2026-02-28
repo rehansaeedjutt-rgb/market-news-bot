@@ -1,0 +1,53 @@
+name: 24/7 Market Bot with Memory
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Har ghante auto-run hoga
+  workflow_dispatch:      # Manual test ke liye button
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    # Permission taake bot repository mein wapis push kar sake
+    permissions:
+      contents: write
+
+    steps:
+      # 1. Repository ka code uthana
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true # Git credentials ko save rakhna
+
+      # 2. Python environment setup
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      # 3. Zaroori libraries install karna
+      - name: Install Libraries
+        run: pip install feedparser requests python-dotenv
+
+      # 4. Bot run karna (Isse news send hogi aur sent_urls.txt update hogi)
+      - name: Run Bot
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python bot.py
+
+      # 5. ASLI STEP: Changes ko wapis GitHub par save karna
+      - name: Commit and Push changes
+        run: |
+          # Git ko batana ke kaun changes kar raha hai
+          git config --local user.email "rehansaeed@numl.edu.pk"
+          git config --local user.name "Future-Admiral-Bot"
+          
+          # Sirf database file ko add karna
+          git add sent_urls.txt
+          
+          # Agar koi nayi news nahi bhej gayi, toh error na aaye (|| exit 0)
+          git commit -m "Update sent news database [skip ci]" || echo "No new news to commit"
+          
+          # Changes ko GitHub par wapis bhej dena
+          git push

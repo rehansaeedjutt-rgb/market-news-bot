@@ -1,14 +1,10 @@
-import os
-from dotenv import load_dotenv
-
-load_dotenv()  # Ye line .env file se data uthati hai
-WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK")
 import feedparser
 import requests
 import os
 import time
 from dotenv import load_dotenv
 
+# .env file se configurations load karna
 load_dotenv()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK")
 DB_FILE = "sent_urls.txt"
@@ -25,19 +21,32 @@ def save_sent_url(url):
     with open(DB_FILE, "a") as f:
         f.write(url + "\n")
 
-def send_to_discord(title, link, source):
+def send_to_discord(headline, link, source):
+    """Branded message send karne ke liye setup."""
     payload = {
         "embeds": [{
-            "title": f"🚀 {source} Update",
-            "description": title,
+            "author": {
+                "name": "⚓ Future Admiral - Market Intelligence",
+                "url": "https://github.com/rehansaeedjutt-rgb" # Aap apna profile link de sakte hain
+            },
+            "title": "🚀 Update",
+            "description": f"**{headline}**\n\n*Source: {source}*",
             "url": link,
-            "color": 0x3498db
+            "color": 0x3498db,  # Professional Blue color
+            "footer": {
+                "text": "Future Admiral | Trading & Analysis"
+            },
+            "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         }]
     }
-    requests.post(WEBHOOK_URL, json=payload)
+    response = requests.post(WEBHOOK_URL, json=payload)
+    if response.status_code == 204:
+        print(f"Successfully sent branded update: {headline}")
 
 def fetch_market_news():
     sent_urls = get_sent_urls()
+    
+    # Aapki di gayi websites ki RSS feeds
     feeds = {
         "CoinDesk": "https://www.coindesk.com/arc/outboundfeeds/rss/",
         "CoinTelegraph": "https://cointelegraph.com/rss",
@@ -59,6 +68,6 @@ def fetch_market_news():
 
 if __name__ == "__main__":
     if not WEBHOOK_URL:
-        print("Error: DISCORD_WEBHOOK is not set.")
+        print("Error: DISCORD_WEBHOOK environment variable is not set.")
     else:
         fetch_market_news()

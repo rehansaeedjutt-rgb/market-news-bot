@@ -50,7 +50,8 @@ def fetch_market_news():
     feeds = {
         "CoinDesk": "https://www.coindesk.com/arc/outboundfeeds/rss/",
         "CoinTelegraph": "https://cointelegraph.com/rss",
-        "Financial Times": "https://www.ft.com/markets?format=rss"
+        "Financial Times": "https://www.ft.com/markets?format=rss",
+        "Watcher.guru": "https://watcher.guru/news/feed"
     }
 
     for source, url in feeds.items():

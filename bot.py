@@ -2,6 +2,7 @@ import feedparser
 import requests
 import os
 import time
+import concurrent.futures
 from dotenv import load_dotenv
 
 # .env file se configurations load karna
@@ -59,13 +60,28 @@ def fetch_market_news():
         "Watcher.guru": "https://watcher.guru/news/feed"
     }
 
+    def parse_feed_with_timeout(content, timeout=5):
+        """Parse feed content with a timeout using a thread pool."""
+        try:
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+                future = ex.submit(feedparser.parse, content)
+                return future.result(timeout=timeout)
+        except concurrent.futures.TimeoutError:
+            print("Feed parsing timed out")
+            return None
+        except Exception as e:
+            print(f"Feed parsing error: {e}")
+            return None
+
     for source, url in feeds.items():
         try:
             resp = requests.get(url, timeout=10, headers={
                 "User-Agent": "MarketNewsBot/1.0 (+https://github.com/rehansaeedjutt-rgb)"
             })
             resp.raise_for_status()
-            feed = feedparser.parse(resp.content)
+            feed = parse_feed_with_timeout(resp.content, timeout=6)
+            if feed is None:
+                continue
         except requests.exceptions.RequestException as e:
             print(f"Failed to fetch feed {source}: {e}")
             continue

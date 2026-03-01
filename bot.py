@@ -39,9 +39,14 @@ def send_to_discord(headline, link, source):
             "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         }]
     }
-    response = requests.post(WEBHOOK_URL, json=payload)
-    if response.status_code == 204:
-        print(f"Successfully sent branded update: {headline}")
+    try:
+        response = requests.post(WEBHOOK_URL, json=payload, timeout=5)
+        if response.status_code == 204:
+            print(f"Successfully sent branded update: {headline}")
+        else:
+            print(f"Failed to send to Discord (status {response.status_code}): {response.text[:200]}")
+    except requests.exceptions.RequestException as e:
+        print(f"Discord webhook request failed: {e}")
 
 def fetch_market_news():
     sent_urls = get_sent_urls()

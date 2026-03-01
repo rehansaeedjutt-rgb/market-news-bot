@@ -55,8 +55,20 @@ def fetch_market_news():
     }
 
     for source, url in feeds.items():
-        feed = feedparser.parse(url)
-        if feed.entries:
+        try:
+            resp = requests.get(url, timeout=10, headers={
+                "User-Agent": "MarketNewsBot/1.0 (+https://github.com/rehansaeedjutt-rgb)"
+            })
+            resp.raise_for_status()
+            feed = feedparser.parse(resp.content)
+        except requests.exceptions.RequestException as e:
+            print(f"Failed to fetch feed {source}: {e}")
+            continue
+        except Exception as e:
+            print(f"Error parsing feed {source}: {e}")
+            continue
+
+        if getattr(feed, 'entries', None):
             latest = feed.entries[0]
             # Check if this news is new
             if latest.link not in sent_urls:
@@ -65,7 +77,7 @@ def fetch_market_news():
                 print(f"New Alert Sent: {latest.title}")
             else:
                 print(f"Skipping old news: {latest.title}")
-            time.sleep(1)
+        time.sleep(1)
 
 if __name__ == "__main__":
     if not WEBHOOK_URL:

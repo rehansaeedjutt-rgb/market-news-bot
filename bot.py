@@ -54,7 +54,9 @@ def fetch_market_news():
         "CoinDesk": "https://www.coindesk.com/arc/outboundfeeds/rss/",
         "CoinTelegraph": "https://cointelegraph.com/rss",
         "Financial Times": "https://www.ft.com/markets?format=rss",
-        "Watcher.guru": "https://watcher.guru/news/feed"
+        "Watcher.guru": "https://watcher.guru/news/feed",
+        "The Block": "https://www.theblock.co/rss.xml",
+        "Bitcoin Magazine": "https://bitcoinmagazine.com/feed"
     }
 
     def fetch_and_parse(url):

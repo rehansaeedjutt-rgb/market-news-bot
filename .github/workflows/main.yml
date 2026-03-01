@@ -1,0 +1,40 @@
+name: 24/7 Market Bot with Memory
+
+on:
+  schedule:
+    - cron: '0 * * * *' # Har ghante auto-repeat
+  workflow_dispatch:      # Manual test button
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Memory save karne ki ijazat
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install Libraries
+        run: pip install feedparser requests python-dotenv
+
+      - name: Run Bot
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        run: python bot.py
+
+      # YE STEP NAYI NEWS KO YAAD RAKHTA HAI
+      - name: Commit and Push changes
+        run: |
+          git config --local user.email "rehansaeed@numl.edu.pk"
+          git config --local user.name "Future-Admiral-Bot"
+          git add sent_urls.txt
+          git commit -m "Memory Update: News sent [skip ci]" || exit 0
+          git push

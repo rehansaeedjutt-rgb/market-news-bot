@@ -26,14 +26,11 @@ def send_to_discord(headline, link, source):
     """Branded message send karne ke liye setup."""
     payload = {
         "embeds": [{
-            "author": {
-                "name": "⚓ Future Admiral - Market Intelligence",
-                "url": "https://github.com/rehansaeedjutt-rgb" # Aap apna profile link de sakte hain
-            },
-            "title": "🚀 Update",
-            "description": f"**{headline}**\n\n*Source: {source}*",
+            # simple layout: title (📰 News), headline text, footer includes branding
+            "title": "📰 News",
+            "description": headline,
             "url": link,
-            "color": 0x3498db,  # Professional Blue color
+            "color": 0x3498db,
             "footer": {
                 "text": "Future Admiral | Trading & Analysis"
             },

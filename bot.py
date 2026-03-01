@@ -17,6 +17,19 @@ def get_sent_urls():
     with open(DB_FILE, "r") as f:
         return set(line.strip() for line in f)
 
+def normalize_url(url):
+    """Normalize URL by removing query params and trailing slashes."""
+    from urllib.parse import urlparse, urlunparse
+    parsed = urlparse(url)
+    # Remove query string and fragment to avoid duplicate tracking
+    normalized = urlunparse((parsed.scheme, parsed.netloc, parsed.path.rstrip('/'), '', '', ''))
+    return normalized
+
+def headline_hash(headline):
+    """Create a simple hash of headline for duplicate detection."""
+    import hashlib
+    return hashlib.md5(headline.lower().strip().encode()).hexdigest()[:16]
+
 def save_sent_url(url):
     """Nayi bheji gayi news ka link save karta hai."""
     with open(DB_FILE, "a") as f:
@@ -84,10 +97,17 @@ def fetch_market_news():
 
         if getattr(feed, 'entries', None):
             latest = feed.entries[0]
-            # Check if this news is new
-            if latest.link not in sent_urls:
+            normalized_link = normalize_url(latest.link)
+            headline_id = headline_hash(latest.title)
+            
+            # Check if this news is new (by URL or headline)
+            is_duplicate = normalized_link in sent_urls or headline_id in sent_urls
+            
+            if not is_duplicate:
                 send_to_discord(latest.title, latest.link, source)
-                save_sent_url(latest.link)
+                # Save both normalized URL and headline hash for dedup
+                save_sent_url(normalized_link)
+                save_sent_url(headline_id)
                 print(f"New Alert Sent: {latest.title}")
             else:
                 print(f"Skipping old news: {latest.title}")

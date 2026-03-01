@@ -60,28 +60,22 @@ def fetch_market_news():
         "Watcher.guru": "https://watcher.guru/news/feed"
     }
 
-    def parse_feed_with_timeout(content, timeout=5):
-        """Parse feed content with a timeout using a thread pool."""
-        try:
-            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
-                future = ex.submit(feedparser.parse, content)
-                return future.result(timeout=timeout)
-        except concurrent.futures.TimeoutError:
-            print("Feed parsing timed out")
-            return None
-        except Exception as e:
-            print(f"Feed parsing error: {e}")
-            return None
+    def fetch_and_parse(url):
+        """Fetch URL and parse feed. Designed to run inside a worker thread."""
+        resp = requests.get(url, timeout=8, headers={
+            "User-Agent": "MarketNewsBot/1.0 (+https://github.com/rehansaeedjutt-rgb)"
+        })
+        resp.raise_for_status()
+        return feedparser.parse(resp.content)
 
     for source, url in feeds.items():
         try:
-            resp = requests.get(url, timeout=10, headers={
-                "User-Agent": "MarketNewsBot/1.0 (+https://github.com/rehansaeedjutt-rgb)"
-            })
-            resp.raise_for_status()
-            feed = parse_feed_with_timeout(resp.content, timeout=6)
-            if feed is None:
-                continue
+            with concurrent.futures.ThreadPoolExecutor(max_workers=1) as ex:
+                future = ex.submit(fetch_and_parse, url)
+                feed = future.result(timeout=12)
+        except concurrent.futures.TimeoutError:
+            print(f"Timeout fetching/parsing feed {source}")
+            continue
         except requests.exceptions.RequestException as e:
             print(f"Failed to fetch feed {source}: {e}")
             continue

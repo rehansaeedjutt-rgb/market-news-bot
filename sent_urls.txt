@@ -151,3 +151,7 @@ https://www.theblock.co/post/391838/prosecutors-seek-forfeiture-of-327k-in-tethe
 f67ed1e665e76096
 https://bitcoinmagazine.com/news/as-bombs-fall-on-tehran-irans-crypto
 983cc18e547d0ccd
+https://cointelegraph.com/news/bitfinex-relaunches-tokenized-bond-program-on-bitcoin-s-liquid-network
+245cb1aa78895ecc
+https://www.theblock.co/post/391855/pump-fun-adds-support-tokens-launched-rival-memecoin-generators-other-non-native-assets
+05c04667eb5b7aaa

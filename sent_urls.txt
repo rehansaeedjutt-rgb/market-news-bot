@@ -641,3 +641,7 @@ https://bitcoinmagazine.com/print/the-core-issue-consensus-cleanup
 e019c820dab83432
 https://cointelegraph.com/news/justin-sun-sec-lawsuit-settles-10-million
 e8fa38f830277a11
+https://cointelegraph.com/news/construction-quantum-facility-1m-qubits-begins
+1d71ac4ca9961d33
+https://www.ft.com/content/95d840fe-9838-4b52-8f81-464fe7c52902
+6866b8e7c246efaf

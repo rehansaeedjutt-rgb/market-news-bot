@@ -881,3 +881,5 @@ https://www.ft.com/content/9d7ae224-0f3a-4654-8174-b5b3ee166f0a
 a39e2990d3bb827a
 https://cointelegraph.com/news/brazil-pix-payments-expand-argentina
 2c3c1533676c8d2a
+https://www.theblock.co/post/392765/alibaba-linked-ai-agent-hijacked-gpus-for-unauthorized-crypto-mining-researchers-say
+36bda787adb876d2

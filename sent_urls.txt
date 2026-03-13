@@ -1513,3 +1513,7 @@ https://cointelegraph.com/news/blackrock-staked-ether-etf-ethb-15-million-debut-
 f84dfcdff42c5baf
 https://www.ft.com/content/d213e507-905e-440b-987e-66bfc1acdffe
 16fc24c7574a1c3b
+https://cointelegraph.com/news/mev-bot-makes-10-million-in-crypto-swap-gone-wrong
+3b10e7f176aea1fc
+https://www.theblock.co/post/393487/sec-narrower-exemption-tokenized-securities
+6bba197f8adc8290

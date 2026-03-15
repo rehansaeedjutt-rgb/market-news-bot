@@ -1739,3 +1739,7 @@ https://www.coindesk.com/markets/2026/03/15/bitcoin-set-for-best-week-since-sept
 a6427d9d89600d8c
 https://cointelegraph.com/news/vitalik-buterin-simplify-ethereum-node
 c208d87f6d7ea08e
+https://watcher.guru/news/xrp-buyers-are-dominating-the-market-should-you-join-them
+f04607c488afcef6
+https://www.theblock.co/post/393621/aave-and-cow-swap-publish-dueling-post-mortems-after-50-million-defi-swap-disaster
+f4f4c8e00734452a

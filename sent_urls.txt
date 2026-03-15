@@ -1721,3 +1721,5 @@ https://www.ft.com/content/568039e3-4707-4ad7-98b7-fb0df57d4667
 44a78ee5587ff3ee
 https://watcher.guru/news/new-xrp-rich-list-reveals-the-exact-xrp-needed-to-enter-the-top-1
 5ae91bec121cb8f6
+https://www.coindesk.com/tech/2026/03/15/visa-is-ready-for-ai-agents-so-is-coinbase-they-re-building-very-different-internets
+149e0f8839b5f76c

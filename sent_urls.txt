@@ -1735,3 +1735,7 @@ https://watcher.guru/news/68-million-shib-burned-why-this-could-keep-hope-alive-
 a4a1ac52b2ace7bb
 https://www.theblock.co/post/393622/venus-protocol-left-with-roughly-2m-in-bad-debt-after-exploit-manipulates-thenas-the-token-price
 0710d657da5d9c22
+https://www.coindesk.com/markets/2026/03/15/bitcoin-set-for-best-week-since-september-2025-as-correlation-with-tech-stocks-weakens
+a6427d9d89600d8c
+https://cointelegraph.com/news/vitalik-buterin-simplify-ethereum-node
+c208d87f6d7ea08e

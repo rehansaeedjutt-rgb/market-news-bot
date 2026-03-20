@@ -2323,3 +2323,5 @@ https://watcher.guru/news/azza-introduces-a-simpler-way-to-access-crypto-mining
 9d24d668b099ed14
 https://www.theblock.co/post/394467/bitcoin-long-term-holder-activity-slows-vaneck
 57565557bfc9ea06
+https://www.coindesk.com/markets/2026/03/20/ripple-s-survey-shows-banks-fintechs-and-corporates-are-all-in-on-digital-assets-prioritizing-stablecoins-and-custody
+6d7f6f139a008a6b

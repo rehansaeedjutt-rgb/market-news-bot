@@ -2299,3 +2299,7 @@ https://cointelegraph.com/news/execution-quality-missing-metric
 3fe13ad5d26f734e
 https://www.ft.com/content/a2b593db-93c2-47d6-9d1d-60f56f8cd61f
 c47b6804e8ffd52d
+https://cointelegraph.com/news/fbi-warns-phishing-scam-tron-blockchain
+12dabba11c9f6b45
+https://www.theblock.co/post/394448/morgan-stanley-amended-s-1-filing
+08352553564e559b

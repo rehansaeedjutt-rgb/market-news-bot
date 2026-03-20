@@ -2295,3 +2295,7 @@ https://bitcoinmagazine.com/news/north-carolina-propose-bitcoin-reserve
 3cc94e5f40383bd6
 https://cointelegraph.com/news/bitcoin-price-tussle-at-dollar70k-may-hint-that-market-bottom-is-not-in
 1dba04503342f013
+https://cointelegraph.com/news/execution-quality-missing-metric
+3fe13ad5d26f734e
+https://www.ft.com/content/a2b593db-93c2-47d6-9d1d-60f56f8cd61f
+c47b6804e8ffd52d

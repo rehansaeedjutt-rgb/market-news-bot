@@ -2491,3 +2491,7 @@ https://www.theblock.co/post/394582/resolvs-usr-stablecoin-depegs-after-attacker
 ca11e1b2a0092563
 https://www.coindesk.com/tech/2026/03/22/ethereum-faces-make-or-break-moment-in-high-stakes-balancing-act-as-scaling-quantum-and-ai-pressures-mount
 1e37cfc43e4a8219
+https://www.coindesk.com/policy/2026/03/22/the-sec-explains-how-it-s-viewing-a-crypto-security-state-of-crypto
+471efe17274e56aa
+https://cointelegraph.com/news/fidelity-letter-sec-alternative-trading-systems
+f6080cb2fb4ca920

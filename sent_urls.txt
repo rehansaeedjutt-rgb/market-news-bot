@@ -2463,3 +2463,7 @@ https://cointelegraph.com/news/nevada-judge-temporarily-blocks-kalshi-from-opera
 c5826804d32eebd0
 https://www.ft.com/content/327a0a05-5565-462a-83cd-5c68c1f805d9
 6813f0ead8db3f13
+https://www.coindesk.com/markets/2026/03/22/bitcoin-miners-are-losing-usd19-000-on-every-btc-produced-as-difficulty-drops-7-8
+df3e3cff731e52ef
+https://cointelegraph.com/news/resolv-labs-stablecoin-depegs-attacker-mints-millions-of-tokens
+41dbb61415ceecc3

@@ -2469,3 +2469,5 @@ https://cointelegraph.com/news/resolv-labs-stablecoin-depegs-attacker-mints-mill
 41dbb61415ceecc3
 https://www.coindesk.com/markets/2026/03/22/xrp-falls-3-as-breakdown-below-usd1-44-and-bitcoin-weakness-caps-recovery
 2fbbe4322616be6c
+https://watcher.guru/news/research-reveals-why-ripple-will-never-abandon-xrp
+0908e7ca6bf71340

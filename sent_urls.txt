@@ -2459,3 +2459,5 @@ https://www.theblock.co/post/394579/bitcoin-mining-difficulty-drops-7-8-as-miner
 170aca423e37110e
 https://cointelegraph.com/news/cftc-staff-clarify-expectations-crypto-collateral
 91d434b61f620238
+https://cointelegraph.com/news/nevada-judge-temporarily-blocks-kalshi-from-operating-in-the-state
+c5826804d32eebd0

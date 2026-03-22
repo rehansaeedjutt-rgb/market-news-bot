@@ -2485,3 +2485,7 @@ https://watcher.guru/news/legal-expert-says-buy-more-xrp-at-the-right-price-as-m
 81c2017881abdd24
 https://www.coindesk.com/markets/2026/03/20/gold-falters-as-macro-pressures-build-bitcoin-holds-liquidity-trend
 46b86860c895d1ab
+https://www.coindesk.com/business/2026/03/22/the-genius-and-the-danger-of-strc-how-strategy-s-new-funding-model-bends-so-it-doesn-t-break
+b8ec1b8a2be468ca
+https://www.theblock.co/post/394582/resolvs-usr-stablecoin-depegs-after-attacker-mints-80-million-unbacked-tokens-extracts-roughly-25-million
+ca11e1b2a0092563

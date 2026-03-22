@@ -2467,3 +2467,5 @@ https://www.coindesk.com/markets/2026/03/22/bitcoin-miners-are-losing-usd19-000-
 df3e3cff731e52ef
 https://cointelegraph.com/news/resolv-labs-stablecoin-depegs-attacker-mints-millions-of-tokens
 41dbb61415ceecc3
+https://www.coindesk.com/markets/2026/03/22/xrp-falls-3-as-breakdown-below-usd1-44-and-bitcoin-weakness-caps-recovery
+2fbbe4322616be6c

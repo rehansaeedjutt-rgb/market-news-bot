@@ -2489,3 +2489,5 @@ https://www.coindesk.com/business/2026/03/22/the-genius-and-the-danger-of-strc-h
 b8ec1b8a2be468ca
 https://www.theblock.co/post/394582/resolvs-usr-stablecoin-depegs-after-attacker-mints-80-million-unbacked-tokens-extracts-roughly-25-million
 ca11e1b2a0092563
+https://www.coindesk.com/tech/2026/03/22/ethereum-faces-make-or-break-moment-in-high-stakes-balancing-act-as-scaling-quantum-and-ai-pressures-mount
+1e37cfc43e4a8219

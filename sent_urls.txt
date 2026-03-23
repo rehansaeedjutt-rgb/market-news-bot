@@ -2621,3 +2621,7 @@ https://cointelegraph.com/news/stripe-mpp-ai-agents-micropayments-forrester
 79de1df02f2461af
 https://www.ft.com/content/1171d623-3709-4f6e-8ded-a5df4ec57696
 c3600b19e2075a36
+https://www.coindesk.com/policy/2026/03/23/stablecoin-yield-in-crypto-clarity-act-won-t-allow-rewards-on-balances-latest-text-says
+80c71ab662a97642
+https://cointelegraph.com/news/bitcoin-s-battle-for-70k-continues-as-data-shows-traders-avoiding-bullish-positioning
+7352a208a443ec4b

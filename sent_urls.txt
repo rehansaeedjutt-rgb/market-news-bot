@@ -2735,3 +2735,7 @@ https://www.theblock.co/post/394923/ethereum-block-builder-eureka-labs-funding-p
 67f1e599524be93b
 https://bitcoinmagazine.com/print/the-core-issue-beneath-the-binary-verifying-trust
 51cd1586b98db54d
+https://cointelegraph.com/news/lombard-taps-bitwise-to-bring-bitcoin-yield-and-lending-to-institutional-custody-embargo-tuesday-2-30-et
+1948b60ad8b28ed9
+https://www.theblock.co/post/394940/the-daily-balancer-labs-to-wind-down-bernstein-calls-bitcoin-bottom-with-150k-target-for-2026-and-more
+ef2b1d450a38d82b

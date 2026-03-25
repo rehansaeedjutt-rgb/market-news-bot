@@ -2881,3 +2881,5 @@ https://www.theblock.co/post/395159/lawmakers-weigh-tokenization-push-sec-preps-
 946933f80f8e6224
 https://bitcoinmagazine.com/news/bitcoin-volatility-falls-as-asset-matures
 ac42581136c710b1
+https://www.coindesk.com/business/2026/03/25/bitgo-teams-with-zksync-to-build-tokenized-deposit-infrastructure-to-bring-banks-onchain
+0e375391820872ae

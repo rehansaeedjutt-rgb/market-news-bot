@@ -2883,3 +2883,7 @@ https://bitcoinmagazine.com/news/bitcoin-volatility-falls-as-asset-matures
 ac42581136c710b1
 https://www.coindesk.com/business/2026/03/25/bitgo-teams-with-zksync-to-build-tokenized-deposit-infrastructure-to-bring-banks-onchain
 0e375391820872ae
+https://www.coindesk.com/business/2026/03/25/elon-musk-s-x-hires-crypto-savvy-design-lead-as-x-money-payments-push-inches-closer
+8ec7a93fd6856db6
+https://cointelegraph.com/news/bitcoin-compression-outcome-may-send-btc-to-dollar80k-analyst
+74f952347149571b

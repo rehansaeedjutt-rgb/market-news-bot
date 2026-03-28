@@ -3165,3 +3165,7 @@ https://cointelegraph.com/news/morgan-stanley-sets-ultra-low-fee-for-bitcoin-etf
 1f63ffe413a6e323
 https://www.ft.com/content/4f095d4b-46cb-4ed6-90cf-aa560fba2bc1
 afeb7b2b25a747c7
+https://www.coindesk.com/markets/2026/03/27/bitcoin-miners-are-becoming-ai-companies-and-selling-their-btc-to-fund-the-transition
+ca0e17f16270c18d
+https://cointelegraph.com/news/stablecoins-will-be-cryptos-chatgpt-moment-ripple-garlinghouse
+d3fcb8919e5832e5

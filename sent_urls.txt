@@ -3195,3 +3195,5 @@ https://www.coindesk.com/tech/2026/03/28/watch-out-bitcoin-devs-google-says-post
 83e46ea0e52bb86f
 https://watcher.guru/news/see-why-xrps-real-value-is-hidden-while-wall-street-buys-at-todays-price
 c44f914abd24e3f2
+https://www.coindesk.com/tech/2026/03/28/here-s-what-next-as-anthropic-s-most-powerful-ai-model-leaked-via-unsecured-data-cache
+7d4201da96b69244

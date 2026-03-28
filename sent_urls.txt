@@ -3203,3 +3203,5 @@ https://cointelegraph.com/news/google-banks-back-5b-texas-data-center-anthropic
 b0017183fb100025
 https://watcher.guru/news/citi-boosts-nvidia-price-target-to-300-its-not-the-only-one
 0d670208e15a46c9
+https://www.coindesk.com/tech/2026/03/28/here-s-how-bitcoin-ethereum-and-other-networks-are-preparing-for-the-looming-quantum-threat
+000fbeaa760a92eb

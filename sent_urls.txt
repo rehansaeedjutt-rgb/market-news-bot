@@ -3245,3 +3245,7 @@ https://watcher.guru/news/xrp-price-prediction-could-xrp-hit-3-in-april-experts-
 d8c60253af06b3d2
 https://www.coindesk.com/markets/2026/03/29/xrp-tests-usd1-33-as-rising-leverage-and-weak-price-action-create-unstable-setup
 696dce52d1d977d2
+https://www.coindesk.com/tech/2026/03/29/new-ethereum-project-aims-to-fix-network-fragmentation-and-improve-user-experience
+7dc24da256d55c2b
+https://www.theblock.co/post/395578/gnosis-and-zisk-announce-ethereum-economic-zone-rollup-framework-with-ethereum-foundation-co-funding
+ee5c8c86d8197247

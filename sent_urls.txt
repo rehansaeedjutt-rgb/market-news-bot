@@ -3237,3 +3237,5 @@ https://cointelegraph.com/news/bnp-paribas-bitcoin-ether-etns-france-retail
 e27594e4f12f17ec
 https://www.ft.com/content/21607fce-182d-45d1-bcf2-d2a78f9339cb
 b283237949cd1129
+https://cointelegraph.com/news/onchain-commodity-trading-liquidity-gap-tradfi-depth
+c3d3688b3e778702

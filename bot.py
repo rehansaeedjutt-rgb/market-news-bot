@@ -74,7 +74,7 @@ def send_branded_analysis(headline, description, source):
                 }
             ],
             "footer": {
-                "text": "Future Admiral | Proprietary Analysis Engine"
+                "text": "Future Admiral | Trading & Analysis"
             },
             "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         }]

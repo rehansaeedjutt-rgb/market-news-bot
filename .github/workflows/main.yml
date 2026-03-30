@@ -2,20 +2,20 @@ name: 24/7 Market Bot with Memory
 
 on:
   schedule:
-    - cron: '0 * * * *' # Har ghante auto-repeat
+    - cron: '*/10 * * * *' # Recommended: Har 10 minute baad auto-check
   workflow_dispatch:      # Manual test button
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Memory save karne ki ijazat
+      contents: write # Memory file save karne ki ijazat
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          persist-credentials: true
+          persist-credentials: true # Git push ke liye zaroori hai
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -27,7 +27,7 @@ jobs:
 
       - name: Run Bot
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} # GitHub Secrets se link
         run: python bot.py
 
       # YE STEP NAYI NEWS KO YAAD RAKHTA HAI
@@ -38,3 +38,5 @@ jobs:
           git add sent_urls.txt
           git commit -m "Memory Update: News sent [skip ci]" || exit 0
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

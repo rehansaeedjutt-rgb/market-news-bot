@@ -2,20 +2,20 @@ name: 24/7 Market Bot with Memory
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # Recommended: Har 10 minute baad auto-check
+    - cron: '*/10 * * * *' # Har 10 minute baad check kare ga
   workflow_dispatch:      # Manual test button
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Memory file save karne ki ijazat
+      contents: write # Memory file wapas save karne ki ijazat
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          persist-credentials: true # Git push ke liye zaroori hai
+          persist-credentials: true
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -27,10 +27,10 @@ jobs:
 
       - name: Run Bot
         env:
-          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }} # GitHub Secrets se link
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: python bot.py
 
-      # YE STEP NAYI NEWS KO YAAD RAKHTA HAI
+      # YE STEP REPEAT MESSAGES KO ROKTA HAI
       - name: Commit and Push changes
         run: |
           git config --local user.email "rehansaeed@numl.edu.pk"

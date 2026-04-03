@@ -2,14 +2,14 @@ name: 24/7 Market Bot with Memory
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # Har 10 minute baad check kare ga
-  workflow_dispatch:      # Manual test button
+    - cron: '*/10 * * * *' # Har 10 minute baad auto-check
+  workflow_dispatch:      # Manual trigger button
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Memory file wapas save karne ki ijazat
+      contents: write # Memory save karne ki ijazat
 
     steps:
       - name: Checkout code
@@ -30,13 +30,12 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: python bot.py
 
-      # YE STEP REPEAT MESSAGES KO ROKTA HAI
       - name: Commit and Push changes
         run: |
-          git config --local user.email "rehansaeed@numl.edu.pk"
-          git config --local user.name "Future-Admiral-Bot"
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add sent_urls.txt
-          git commit -m "Memory Update: News sent [skip ci]" || exit 0
+          git commit -m "Memory Update [skip ci]" || exit 0
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

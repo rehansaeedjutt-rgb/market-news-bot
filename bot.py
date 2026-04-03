@@ -6,105 +6,88 @@ import hashlib
 import re
 from dotenv import load_dotenv
 
-# --- CONFIGURATION ---
+# Environment variables load karna
 load_dotenv()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK")
 DB_FILE = "sent_urls.txt"
 
-def get_sent_hashes():
-    """Memory read karta hai (Hashes) taake repetition na ho."""
+def get_memory():
     if not os.path.exists(DB_FILE): return set()
     with open(DB_FILE, "r") as f:
         return set(line.strip() for line in f)
 
-def save_sent_hash(h_hash):
-    """Nayi news ka hash save karta hai."""
+def save_memory(identifier):
     with open(DB_FILE, "a") as f:
-        f.write(h_hash + "\n")
+        f.write(identifier + "\n")
 
-def analyze_intelligence(headline, description):
-    """News ko analyze karke Coin aur Impact nikalta hai."""
-    combined_text = (headline + " " + description).lower()
-    
+def analyze_market_impact(text):
+    text = text.lower()
     # 1. Coin Identification
-    coins = {
-        "btc": "Bitcoin (BTC)", "eth": "Ethereum (ETH)", "xrp": "Ripple (XRP)", 
-        "sol": "Solana (SOL)", "doge": "Dogecoin (DOGE)", "pepe": "PEPE Coin",
-        "bnb": "Binance (BNB)", "ada": "Cardano (ADA)"
-    }
-    detected_coin = "General Crypto Market"
+    coins = {"btc": "Bitcoin", "eth": "Ethereum", "xrp": "Ripple", "sol": "Solana", "doge": "Dogecoin"}
+    target = "Crypto Market"
     for code, name in coins.items():
-        if code in combined_text:
-            detected_coin = name
+        if code in text:
+            target = name
             break
-
-    # 2. Market Impact (Pump vs Dump)
-    if any(word in combined_text for word in ["surge", "pump", "bullish", "moon", "buy", "approved", "green"]):
-        impact = "🚀 **PUMP / BOOST** (Positive Momentum Expected)"
+            
+    # 2. Pump/Dump Prediction Logic
+    if any(w in text for w in ["surge", "pump", "bullish", "approved", "buy", "growth"]):
+        impact = "🚀 **PUMP / BOOST** (Positive Market Move)"
         color = 0x2ecc71 # Green
-    elif any(word in combined_text for word in ["dump", "crash", "bearish", "dip", "sell", "banned", "hack", "red"]):
-        impact = "📉 **DUMP / CRASH** (Caution: Bearish Movement)"
+    elif any(w in text for w in ["crash", "dump", "bearish", "hack", "drop", "sell"]):
+        impact = "📉 **DUMP / CRASH** (Negative Market Move)"
         color = 0xe74c3c # Red
     else:
-        impact = "⚖️ **NEUTRAL** (Market Stability / Sideways)"
+        impact = "⚖️ **NEUTRAL** (Stable / Sideways)"
         color = 0x3498db # Blue
-
-    return detected_coin, impact, color
+        
+    return target, impact, color
 
 def send_to_discord(headline, summary):
-    coin, impact, embed_color = analyze_intelligence(headline, summary)
-    
-    # HTML clean karna aur news ko concise banana
-    clean_desc = re.sub('<.*?>', '', summary)[:500] 
+    target, impact, color = analyze_market_impact(headline + " " + summary)
+    # HTML saaf karke summary ko chota karna
+    clean_desc = re.sub('<.*?>', '', summary)[:400]
 
     payload = {
         "username": "⚓ FUTURE ADMIRAL INTELLIGENCE",
-        "avatar_url": "https://i.imgur.com/your-logo.png", # Agar aapka logo hai toh link daalein
         "embeds": [{
             "title": "📋 ADMIRAL'S MARKET INTELLIGENCE",
-            "description": f"**{headline}**",
-            "color": embed_color,
+            "description": f"### {headline}",
+            "color": color,
             "fields": [
-                {
-                    "name": "📝 Analysis & Breakdown",
-                    "value": clean_desc if clean_desc else "Direct market move detected.",
-                    "inline": False
-                },
-                {
-                    "name": "🪙 Target Asset",
-                    "value": coin,
-                    "inline": True
-                },
-                {
-                    "name": "📊 Market Outlook",
-                    "value": impact,
-                    "inline": True
-                }
+                {"name": "📝 Intelligence Breakdown", "value": clean_desc if clean_desc else "Market movement detected."},
+                {"name": "🪙 Target Asset", "value": target, "inline": True},
+                {"name": "📊 Market Forecast", "value": impact, "inline": True}
             ],
-            "footer": {
-                "text": "⚓ Private Intel | Future Admiral Protocol"
-            },
+            "footer": {"text": "Future Admiral | Trading & Analysis•Today"},
             "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         }]
     }
-    requests.post(WEBHOOK_URL, json=payload)
+    r = requests.post(WEBHOOK_URL, json=payload)
+    return r.status_code
 
-def fetch_news():
-    sent_hashes = get_sent_hashes()
-    # Sirf top quality feeds
+def start_engine():
+    print("📡 Admiral Engine Starting...")
+    memory = get_memory()
+    # Multiple sources for better testing
     feeds = ["https://watcher.guru/news/feed", "https://cointelegraph.com/rss"]
     
     for url in feeds:
         feed = feedparser.parse(url)
-        for entry in feed.entries[:3]: # Har source se top 3 news
-            # Title ka hash banate hain deduplication ke liye
-            h_hash = hashlib.md5(entry.title.encode()).hexdigest()
+        for entry in feed.entries[:3]:
+            # News ka unique ID (Headline Hash)
+            news_id = hashlib.md5(entry.title.encode()).hexdigest()
             
-            if h_hash not in sent_hashes:
-                send_to_discord(entry.title, entry.summary)
-                save_sent_hash(h_hash)
-                print(f"✅ Intelligence Relayed: {entry.title[:30]}")
+            if news_id not in memory:
+                status = send_to_discord(entry.title, entry.summary)
+                if status == 204:
+                    save_memory(news_id)
+                    print(f"✅ News Sent: {entry.title[:30]}")
+                else:
+                    print(f"❌ Webhook Error: {status}")
                 time.sleep(2)
+            else:
+                print(f"⏭️ Skipping (Already in memory): {entry.title[:30]}")
 
 if __name__ == "__main__":
-    fetch_news()
+    start_engine()

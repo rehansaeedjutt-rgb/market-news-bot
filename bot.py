@@ -55,11 +55,11 @@ def send_to_discord(headline, summary):
             "description": f"### {headline}",
             "color": color,
             "fields": [
-                {"name": "📝 Intelligence Breakdown", "value": clean_desc if clean_desc else "Market movement detected."},
+                {"name": "📝 Analysis & Breakdown", "value": clean_desc if clean_desc else "Market movement detected."},
                 {"name": "🪙 Target Asset", "value": target, "inline": True},
                 {"name": "📊 Market Forecast", "value": impact, "inline": True}
             ],
-            "footer": {"text": "Future Admiral | Trading & Analysis•Today"},
+            "footer": {"text": "Future Admiral | Trading & Analysis"},
             "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         }]
     }

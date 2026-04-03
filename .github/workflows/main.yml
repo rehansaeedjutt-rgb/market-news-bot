@@ -2,14 +2,14 @@ name: 24/7 Market Bot with Memory
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # Har 10 minute baad auto-check
-  workflow_dispatch:      # Manual trigger button
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
 
 jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Memory save karne ki ijazat
+      contents: write # This is crucial for memory persistence
 
     steps:
       - name: Checkout code
@@ -22,7 +22,7 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Install Libraries
+      - name: Install Dependencies
         run: pip install feedparser requests python-dotenv
 
       - name: Run Bot
@@ -30,12 +30,10 @@ jobs:
           DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: python bot.py
 
-      - name: Commit and Push changes
+      - name: Save Memory to Repo
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "rehansaeed@numl.edu.pk"
+          git config --local user.name "Future-Admiral-Bot"
           git add sent_urls.txt
           git commit -m "Memory Update [skip ci]" || exit 0
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

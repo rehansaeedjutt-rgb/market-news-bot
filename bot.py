@@ -2,120 +2,88 @@ import feedparser
 import requests
 import os
 import time
-import concurrent.futures
-import re # For cleaning HTML tags
+import hashlib
+import re
 from dotenv import load_dotenv
 
 load_dotenv()
 WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK")
 DB_FILE = "sent_urls.txt"
-LOOP_INTERVAL = 600 
 
-def clean_html(raw_html):
-    """Removes HTML tags from RSS descriptions for a clean look."""
-    cleanr = re.compile('<.*?>')
-    cleantext = re.sub(cleanr, '', raw_html)
-    return cleantext
-
-def get_sent_urls():
+def get_sent_hashes():
+    """Memory read karta hai (Hashes aur URLs dono)."""
     if not os.path.exists(DB_FILE): return set()
     with open(DB_FILE, "r") as f:
         return set(line.strip() for line in f)
 
-def save_sent_url(url):
+def save_sent_hash(identifier):
+    """Nayi news ko memory mein save karta hai."""
     with open(DB_FILE, "a") as f:
-        f.write(url + "\n")
+        f.write(identifier + "\n")
 
-def analyze_impact(headline):
-    """
-    A simple logic to guess impact. 
-    In the future, you can replace this with an actual AI API call.
-    """
+def analyze_market(headline):
+    """Coin pehchanta hai aur Market Impact predict karta hai."""
     headline_lower = headline.lower()
-    if any(word in headline_lower for word in ["surge", "pump", "adoption", "buy", "bullish", "approved"]):
-        return "🟢 **BULLISH** (Likely Price Increase)"
-    elif any(word in headline_lower for word in ["hack", "crash", "dump", "banned", "lawsuit", "bearish"]):
-        return "🔴 **BEARISH** (Potential Price Drop)"
-    else:
-        return "🟡 **NEUTRAL** (Market Stability)"
-
-def send_branded_analysis(headline, description, source):
-    """Sends the news with Analysis and Impact, NO clickable website button."""
     
-    clean_desc = clean_html(description)[:500] # Keep it concise
-    impact = analyze_impact(headline)
+    # 1. Coin Identification
+    coins = {"btc": "Bitcoin (BTC)", "eth": "Ethereum (ETH)", "xrp": "Ripple (XRP)", 
+             "sol": "Solana (SOL)", "doge": "Dogecoin", "bnb": "Binance Coin"}
+    detected_coin = "General Market"
+    for code, name in coins.items():
+        if code in headline_lower:
+            detected_coin = name
+            break
 
-    # Creating a professional text-based report
+    # 2. Impact Logic (Pump vs Dump)
+    if any(word in headline_lower for word in ["surge", "pump", "bullish", "approved", "buying"]):
+        impact = "🚀 **BOOST / PUMP** (High Probability)"
+        color = 0x2ecc71 # Green
+    elif any(word in headline_lower for word in ["dump", "crash", "bearish", "banned", "hack", "drop"]):
+        impact = "📉 **DUMP / CRASH** (Warning)"
+        color = 0xe74c3c # Red
+    else:
+        impact = "⚖️ **NEUTRAL** (Sideways Movement)"
+        color = 0x3498db # Blue
+
+    return detected_coin, impact, color
+
+def send_to_discord(headline, summary):
+    coin, impact, embed_color = analyze_market(headline)
+    clean_summary = re.sub('<.*?>', '', summary)[:400] # HTML saaf karna
+
     payload = {
         "username": "⚓ FUTURE ADMIRAL INTELLIGENCE",
         "embeds": [{
-            "title": f"📋 ADMIRAL'S MARKET REPORT",
-            "color": 0x2c3e50, # Dark professional grey
+            "title": "📋 ADMIRAL'S MARKET REPORT",
+            "color": embed_color,
             "fields": [
-                {
-                    "name": "📰 The News",
-                    "value": f"**{headline}**",
-                    "inline": False
-                },
-                {
-                    "name": "📝 Breakdown",
-                    "value": clean_desc if clean_desc else "No detailed summary provided.",
-                    "inline": False
-                },
-                {
-                    "name": "📈 Market Impact",
-                    "value": impact,
-                    "inline": True
-                },
-                {
-                    "name": "🏛️ Source",
-                    "value": source,
-                    "inline": True
-                }
+                {"name": "📰 News Headline", "value": f"**{headline}**", "inline": False},
+                {"name": "📝 Breakdown", "value": clean_summary, "inline": False},
+                {"name": "🪙 Asset", "value": coin, "inline": True},
+                {"name": "📊 Market Effect", "value": impact, "inline": True}
             ],
-            "footer": {
-                "text": "Future Admiral | Trading & Analysis"
-            },
+            "footer": {"text": "Future Admiral | AI-Driven Market Analysis"},
             "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
         }]
     }
+    requests.post(WEBHOOK_URL, json=payload)
 
-    try:
-        # We REMOVED the "url" field from the embed so no website button appears
-        response = requests.post(WEBHOOK_URL, json=payload, timeout=5)
-        if response.status_code == 204:
-            print(f"✅ Analysis Sent: {headline[:30]}...")
-    except Exception as e:
-        print(f"⚠️ Webhook Error: {e}")
-
-def fetch_market_news():
-    print(f"\n--- 📡 Processing Intelligence ({time.strftime('%H:%M:%S')}) ---")
-    sent_urls = get_sent_urls()
+def fetch_news():
+    sent_data = get_sent_hashes()
+    feeds = ["https://watcher.guru/news/feed", "https://cointelegraph.com/rss"]
     
-    feeds = {
-        "CoinDesk": "https://www.coindesk.com/arc/outboundfeeds/rss/",
-        "Watcher Guru": "https://watcher.guru/news/feed",
-        "The Block": "https://www.theblock.co/rss.xml"
-    }
-
-    for source, url in feeds.items():
-        try:
-            feed = feedparser.parse(url)
-            if feed.entries:
-                latest = feed.entries[0]
-                if latest.link not in sent_urls:
-                    # Logic: We send the Title and the Summary (Description)
-                    send_branded_analysis(latest.title, latest.summary, source)
-                    save_sent_url(latest.link)
-                else:
-                    print(f"⏭️ Already analyzed: {latest.title[:30]}...")
-        except Exception as e:
-            print(f"⚠️ Error fetching {source}: {e}")
-        time.sleep(2)
+    for url in feeds:
+        feed = feedparser.parse(url)
+        for entry in feed.entries[:5]:
+            # Sirf URL nahi, title ka hash bhi check karo (Double Security)
+            headline_hash = hashlib.md5(entry.title.encode()).hexdigest()
+            
+            if entry.link not in sent_data and headline_hash not in sent_data:
+                send_to_discord(entry.title, entry.summary)
+                save_sent_hash(entry.link)
+                save_sent_hash(headline_hash)
+                print(f"✅ Sent: {entry.title[:30]}")
+                time.sleep(2)
 
 if __name__ == "__main__":
-    print("⚓ FUTURE ADMIRAL ANALYTICS IS LIVE")
-    while True:
-        fetch_market_news()
-        print(f"💤 Analyzing market trends... (Next check in 10m)")
-        time.sleep(LOOP_INTERVAL)
+    fetch_news()

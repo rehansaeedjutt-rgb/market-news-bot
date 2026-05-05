@@ -4,90 +4,70 @@ import os
 import time
 import hashlib
 import re
+from datetime import datetime
 from dotenv import load_dotenv
 
-# Environment variables load karna
+# Load environment variables
 load_dotenv()
-WEBHOOK_URL = os.getenv("DISCORD_WEBHOOK")
-DB_FILE = "sent_urls.txt"
+WEBHOOK_URL = os.getenv('WEBHOOK_URL')
+COMPANY_NAME = os.getenv('COMPANY_NAME')
+TIMEZONE = os.getenv('TIMEZONE')
+DB_FILE = os.getenv('DB_FILE')
 
+# Function to load article history to avoid duplicates
 def get_memory():
-    if not os.path.exists(DB_FILE): return set()
-    with open(DB_FILE, "r") as f:
-        return set(line.strip() for line in f)
+    try:
+        with open(DB_FILE, 'r') as f:
+            return f.read().splitlines()
+    except FileNotFoundError:
+        return []
 
-def save_memory(identifier):
-    with open(DB_FILE, "a") as f:
-        f.write(identifier + "\n")
+# Function to save processed articles
+def save_memory(articles):
+    with open(DB_FILE, 'a') as f:
+        for article in articles:
+            f.write(article + '\n')
 
-def analyze_market_impact(text):
-    text = text.lower()
-    # 1. Coin Identification
-    coins = {"btc": "Bitcoin", "eth": "Ethereum", "xrp": "Ripple", "sol": "Solana", "doge": "Dogecoin"}
-    target = "Crypto Market"
-    for code, name in coins.items():
-        if code in text:
-            target = name
-            break
-            
-    # 2. Pump/Dump Prediction Logic
-    if any(w in text for w in ["surge", "pump", "bullish", "approved", "buy", "growth"]):
-        impact = "🚀 **PUMP / BOOST** (Positive Market Move)"
-        color = 0x2ecc71 # Green
-    elif any(w in text for w in ["crash", "dump", "bearish", "hack", "drop", "sell"]):
-        impact = "📉 **DUMP / CRASH** (Negative Market Move)"
-        color = 0xe74c3c # Red
+# Function to analyze market impact with institutional sentiment analysis
+def analyze_market_impact(article):
+    sentiment = {'bullish': 0, 'bearish': 0, 'neutral': 0}
+    # Perform sentiment analysis (placeholder - enhance logic with NLP library)
+    if 'positive' in article:
+        sentiment['bullish'] += 1
+    elif 'negative' in article:
+        sentiment['bearish'] += 1
     else:
-        impact = "⚖️ **NEUTRAL** (Stable / Sideways)"
-        color = 0x3498db # Blue
-        
-    return target, impact, color
+        sentiment['neutral'] += 1
 
-def send_to_discord(headline, summary):
-    target, impact, color = analyze_market_impact(headline + " " + summary)
-    # HTML saaf karke summary ko chota karna
-    clean_desc = re.sub('<.*?>', '', summary)[:400]
+    confidence = 100 * (sentiment['bullish'] - sentiment['bearish']) / max(1, sum(sentiment.values()))
+    return sentiment, confidence
 
-    payload = {
-        "username": "⚓ FUTURE ADMIRAL INTELLIGENCE",
-        "embeds": [{
-            "title": "📋 ADMIRAL'S MARKET INTELLIGENCE",
-            "description": f"### {headline}",
-            "color": color,
-            "fields": [
-                {"name": "📝 Analysis & Breakdown", "value": clean_desc if clean_desc else "Market movement detected."},
-                {"name": "🪙 Target Asset", "value": target, "inline": True},
-                {"name": "📊 Market Forecast", "value": impact, "inline": True}
-            ],
-            "footer": {"text": "Future Admiral | Trading & Analysis"},
-            "timestamp": time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime())
-        }]
+# Function to send data to Discord with professional embed formatting
+def send_to_discord(executive_summary, asset_class, sentiment_analysis, signal_strength):
+    embed_content = {
+        'title': COMPANY_NAME + ' Market Update',
+        'description': executive_summary,
+        'fields': [
+            {'name': 'Asset Class', 'value': asset_class},
+            {'name': 'Sentiment Analysis', 'value': str(sentiment_analysis)},
+            {'name': 'Signal Strength', 'value': str(signal_strength)},
+        ],
+        'color': 3066993  # professional color code example
     }
-    r = requests.post(WEBHOOK_URL, json=payload)
-    return r.status_code
+    requests.post(WEBHOOK_URL, json={'embeds': [embed_content]})
 
+# Main orchestrator function
 def start_engine():
-    print("📡 Admiral Engine Starting...")
-    memory = get_memory()
-    # Multiple sources for better testing
-    feeds = ["https://watcher.guru/news/feed", "https://cointelegraph.com/rss"]
-    
-    for url in feeds:
-        feed = feedparser.parse(url)
-        for entry in feed.entries[:3]:
-            # News ka unique ID (Headline Hash)
-            news_id = hashlib.md5(entry.title.encode()).hexdigest()
-            
-            if news_id not in memory:
-                status = send_to_discord(entry.title, entry.summary)
-                if status == 204:
-                    save_memory(news_id)
-                    print(f"✅ News Sent: {entry.title[:30]}")
-                else:
-                    print(f"❌ Webhook Error: {status}")
-                time.sleep(2)
-            else:
-                print(f"⏭️ Skipping (Already in memory): {entry.title[:30]}")
+    articles = get_memory()
+    feed = feedparser.parse('https://finance.yahoo.com/rss/')
+    new_articles = [entry.title for entry in feed.entries if entry.title not in articles]
+    if new_articles:
+        for article in new_articles:
+            sentiment, confidence = analyze_market_impact(article)
+            send_to_discord(article, 'Finance', sentiment, confidence)
+        save_memory(new_articles)
+    else:
+        print('No new articles found.')
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     start_engine()

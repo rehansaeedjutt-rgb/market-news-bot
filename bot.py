@@ -2,7 +2,6 @@ import feedparser
 import requests
 import os
 import time
-import hashlib
 import re
 from datetime import datetime
 from dotenv import load_dotenv
@@ -18,13 +17,10 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 
-# Environment configuration with validation
+# Environment configuration
 WEBHOOK_URL = os.getenv('DISCORD_WEBHOOK')
-COMPANY_NAME = os.getenv('COMPANY_NAME', 'Market Bot')
-TIMEZONE = os.getenv('TIMEZONE', 'UTC')
 DB_FILE = os.getenv('DB_FILE', 'sent_urls.txt')
 
-# Validate required environment variables
 if not WEBHOOK_URL:
     logger.error("ERROR: DISCORD_WEBHOOK not found in .env file")
     exit(1)
@@ -35,10 +31,8 @@ def get_memory():
     try:
         with open(DB_FILE, 'r') as f:
             urls = f.read().splitlines()
-            logger.info(f"Loaded {len(urls)} previously processed articles")
             return urls
     except FileNotFoundError:
-        logger.warning(f"Database file {DB_FILE} not found. Creating new one.")
         return []
 
 
@@ -48,7 +42,6 @@ def save_memory(articles):
         with open(DB_FILE, 'a') as f:
             for article in articles:
                 f.write(article + '\n')
-        logger.info(f"Saved {len(articles)} new articles to database")
     except IOError as e:
         logger.error(f"Error saving to database: {e}")
 
@@ -59,10 +52,8 @@ def analyze_market_impact(article_title):
     
     sentiment = {'bullish': 0, 'bearish': 0, 'neutral': 0}
     
-    # Bullish keywords
-    bullish_keywords = ['surge', 'rally', 'jump', 'gain', 'profit', 'positive', 'bull', 'strong', 'rise', 'buy', 'outperform', 'beat']
-    # Bearish keywords
-    bearish_keywords = ['crash', 'plunge', 'fall', 'loss', 'negative', 'bear', 'weak', 'decline', 'sell', 'underperform', 'miss']
+    bullish_keywords = ['surge', 'rally', 'jump', 'gain', 'profit', 'positive', 'bull', 'strong', 'rise', 'buy', 'outperform', 'beat', 'tops', 'demand', 'soar']
+    bearish_keywords = ['crash', 'plunge', 'fall', 'loss', 'negative', 'bear', 'weak', 'decline', 'sell', 'underperform', 'miss', 'drops', 'hack']
     
     for keyword in bullish_keywords:
         if keyword in article_lower:
@@ -71,66 +62,72 @@ def analyze_market_impact(article_title):
     for keyword in bearish_keywords:
         if keyword in article_lower:
             sentiment['bearish'] += 1
-    
-    # Calculate confidence score
-    total_sentiment = sum(sentiment.values())
-    if total_sentiment == 0:
-        sentiment['neutral'] = 1
-        confidence = 0
-    else:
-        confidence = 100 * (sentiment['bullish'] - sentiment['bearish']) / max(1, total_sentiment)
-    
-    # Determine sentiment label
+            
     if sentiment['bullish'] > sentiment['bearish']:
-        sentiment_label = '📈 Bullish'
+        return "bullish"
     elif sentiment['bearish'] > sentiment['bullish']:
-        sentiment_label = '📉 Bearish'
+        return "bearish"
     else:
-        sentiment_label = '➡️ Neutral'
-    
-    return sentiment, confidence, sentiment_label
+        return "neutral"
 
 
-def send_to_discord(executive_summary, asset_class, sentiment_analysis, signal_strength, sentiment_label):
-    """Send formatted message to Discord"""
+def clean_html(raw_html):
+    """Remove HTML tags from the summary"""
+    cleanr = re.compile('<.*?>')
+    cleantext = re.sub(cleanr, '', raw_html)
+    return cleantext.strip()
+
+
+def send_to_discord(title, link, summary, sentiment_type):
+    """Send formatted message to Discord in Future Admiral Style"""
     try:
-        # Truncate summary if too long
-        summary = executive_summary[:2000] if len(executive_summary) > 2000 else executive_summary
+        # Clean and truncate summary
+        summary = clean_html(summary)
+        short_summary = summary[:350] + '...' if len(summary) > 350 else summary
         
-        # Determine embed color based on sentiment
-        if signal_strength > 30:
-            color = 3066993  # Green (bullish)
-        elif signal_strength < -30:
-            color = 15158332  # Red (bearish)
+        # Determine styling based on sentiment
+        if sentiment_type == "bullish":
+            color = 2067276  # Green border
+            forecast = "🚀 **PUMP / BOOST** (Positive Market Move)"
+        elif sentiment_type == "bearish":
+            color = 15158332  # Red border
+            forecast = "📉 **DUMP / DROP** (Negative Market Move)"
         else:
-            color = 9807270  # Orange (neutral)
+            color = 3447003  # Blue border (Neutral)
+            forecast = "⚖️ **NEUTRAL** (Stable / Sideways)"
         
         embed_content = {
-            'title': f'🔔 {COMPANY_NAME} - Market Update',
-            'description': summary,
+            'author': {
+                'name': "📋 ADMIRAL'S MARKET INTELLIGENCE"
+            },
+            'title': title,
+            'url': link,
+            'description': f"📝 **Analysis & Breakdown**\n{short_summary}\n\n[Read More]({link})",
             'fields': [
-                {'name': '📊 Asset Class', 'value': asset_class, 'inline': True},
-                {'name': '💡 Sentiment', 'value': sentiment_label, 'inline': True},
-                {'name': '📈 Signal Strength', 'value': f"{signal_strength:.1f}%", 'inline': True},
-                {'name': '⏰ Timestamp', 'value': datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'inline': False},
+                {'name': '🪙 Target Asset', 'value': 'Crypto Market', 'inline': True},
+                {'name': '📊 Market Forecast', 'value': forecast, 'inline': True}
             ],
             'color': color,
-            'footer': {'text': f'{COMPANY_NAME} | {TIMEZONE}'}
+            'footer': {
+                'text': f"Future Admiral | Trading & Analysis • {datetime.now().strftime('%m/%d/%Y %I:%M %p')}"
+            }
         }
         
-        payload = {'embeds': [embed_content]}
+        # Set custom username for the bot
+        payload = {
+            'username': 'FUTURE ADMIRAL INTELLIGENCE',
+            'embeds': [embed_content]
+        }
+        
         response = requests.post(WEBHOOK_URL, json=payload, timeout=10)
         
-        if response.status_code == 204:
-            logger.info(f"✅ Successfully sent to Discord: {executive_summary[:50]}...")
+        if response.status_code in [200, 204]:
+            logger.info(f"✅ Successfully sent: {title[:30]}...")
             return True
         else:
-            logger.error(f"❌ Failed to send to Discord: HTTP {response.status_code}")
+            logger.error(f"❌ Failed to send: HTTP {response.status_code}")
             return False
             
-    except requests.exceptions.RequestException as e:
-        logger.error(f"❌ Request error sending to Discord: {e}")
-        return False
     except Exception as e:
         logger.error(f"❌ Unexpected error: {e}")
         return False
@@ -139,59 +136,41 @@ def send_to_discord(executive_summary, asset_class, sentiment_analysis, signal_s
 def start_engine():
     """Main orchestrator function"""
     try:
-        logger.info("=" * 60)
-        logger.info("🚀 Starting Market Intelligence Bot")
-        logger.info("=" * 60)
-        
-        # Load processed articles
         processed_articles = get_memory()
         
-        # Fetch RSS feed
-        logger.info("📡 Fetching market data from RSS feed...")
-        # YAHAN COINTELEGRAPH KA LINK ADD KAR DIYA HAI
+        # Fetch RSS feed from CoinTelegraph
+        logger.info("📡 Fetching market data...")
         feed = feedparser.parse('https://cointelegraph.com/rss')
         
         if not feed.entries:
             logger.warning("⚠️ No entries found in RSS feed")
             return
-        
-        logger.info(f"📰 Found {len(feed.entries)} articles in feed")
-        
-        # Filter new articles
+            
         new_articles = []
         for entry in feed.entries:
             title = entry.title if hasattr(entry, 'title') else 'Unknown'
             link = entry.link if hasattr(entry, 'link') else ''
             
+            # Extract summary from feed description
+            if hasattr(entry, 'description'):
+                summary = entry.description
+            elif hasattr(entry, 'summary'):
+                summary = entry.summary
+            else:
+                summary = "No detailed analysis available for this update."
+            
             if link not in processed_articles and title:
-                new_articles.append({'title': title, 'link': link})
+                new_articles.append({'title': title, 'link': link, 'summary': summary})
         
         if not new_articles:
             logger.info("ℹ️ No new articles found.")
             return
-        
-        logger.info(f"✨ Found {len(new_articles)} new articles!")
-        
-        # Process and send new articles
+            
         for article in new_articles:
             try:
-                title = article['title']
-                link = article['link']
-                
-                sentiment, confidence, sentiment_label = analyze_market_impact(title)
-                
-                # Send to Discord
-                send_to_discord(
-                    executive_summary=f"**{title}**\n\n[Read More]({link})",
-                    asset_class='Finance/Markets',
-                    sentiment_analysis=sentiment,
-                    signal_strength=confidence,
-                    sentiment_label=sentiment_label
-                )
-                
-                # Add small delay to avoid rate limiting
-                time.sleep(1)
-                
+                sentiment = analyze_market_impact(article['title'])
+                send_to_discord(article['title'], article['link'], article['summary'], sentiment)
+                time.sleep(2)  # Delay to avoid Discord rate limits
             except Exception as e:
                 logger.error(f"Error processing article: {e}")
                 continue
@@ -200,13 +179,10 @@ def start_engine():
         links_to_save = [article['link'] for article in new_articles]
         save_memory(links_to_save)
         
-        logger.info("=" * 60)
-        logger.info("✅ Bot cycle completed successfully")
-        logger.info("=" * 60)
+        logger.info("✅ Cycle completed")
         
     except Exception as e:
-        logger.error(f"❌ Fatal error in start_engine: {e}")
-
+        logger.error(f"❌ Fatal error: {e}")
 
 if __name__ == '__main__':
     start_engine()

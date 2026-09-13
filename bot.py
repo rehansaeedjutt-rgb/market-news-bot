@@ -148,7 +148,8 @@ def start_engine():
         
         # Fetch RSS feed
         logger.info("📡 Fetching market data from RSS feed...")
-        feed = feedparser.parse('https://search.cnbc.com/rs/search/combinedcms/view.xml?id=10000664')
+        # YAHAN COINTELEGRAPH KA LINK ADD KAR DIYA HAI
+        feed = feedparser.parse('https://cointelegraph.com/rss')
         
         if not feed.entries:
             logger.warning("⚠️ No entries found in RSS feed")

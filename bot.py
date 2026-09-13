@@ -143,17 +143,10 @@ def start_engine():
         logger.info("🚀 Starting Market Intelligence Bot")
         logger.info("=" * 60)
         
-        # --- TEST PING ADD KIYA HAI YAHAN ---
-        try:
-            requests.post(WEBHOOK_URL, json={"content": "✅ **Test Ping:** Bhai tumhara bot bilkul theek chal raha hai aur khabrain dhoondh raha hai!"}, timeout=5)
-        except Exception as e:
-            logger.error(f"Test ping failed: {e}")
-        # ------------------------------------
-
         # Load processed articles
         processed_articles = get_memory()
         
-        # Fetch RSS feed (YAHOO KI JAGAH CNBC KA LINK ADD KIYA HAI)
+        # Fetch RSS feed
         logger.info("📡 Fetching market data from RSS feed...")
         feed = feedparser.parse('https://search.cnbc.com/rs/search/combinedcms/view.xml?id=10000664')
         
@@ -216,17 +209,3 @@ def start_engine():
 
 if __name__ == '__main__':
     start_engine()
-
-# --- TEST CODE (Check karne ke baad remove kar dein) ---
-import requests
-import os
-
-# Agar aapne Secrets mein webhook ka naam kuch aur rakha hai toh yahan change kar lein
-webhook_url = os.environ.get("DISCORD_WEBHOOK") or os.environ.get("WEBHOOK_URL") or os.environ.get("DISCORD_WEBHOOK_URL")
-
-if webhook_url:
-    requests.post(webhook_url, json={"content": "✅ **Test Message:** Aapka bot bilkul theek kaam kar raha hai aur GitHub Actions on hain!"})
-    print("Test message Discord par bhej diya gaya hai.")
-else:
-    print("Error: Webhook URL nahi mila.")
-# -------------------------------------------------------

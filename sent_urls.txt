@@ -64,3 +64,5 @@ https://cointelegraph.com/news/binance-adds-11-us-listed-etfs-to-wealth-manageme
 https://cointelegraph.com/markets/bitcoin-price-falls-to-756k-september-low-as-global-bonds-hit-multidecade-highs?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
 https://cointelegraph.com/news/standard-chartered-arbitrum-arb-price-10-2030?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
 https://cointelegraph.com/news/mev-bot-intercepts-77m-in-rseth-from-ethereum-wallet-exploit?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
+https://cointelegraph.com/news/bis-paper-finds-major-gap-in-bitcoin-onchain-transfer-estimates?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
+https://cointelegraph.com/markets/crypto-stocks-slide-after-clarity-act-fails-to-advance-in-senate?utm_source=rss_feed&utm_medium=rss&utm_campaign=rss_partner_inbound
